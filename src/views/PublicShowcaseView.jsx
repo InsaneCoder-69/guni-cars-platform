@@ -90,17 +90,17 @@ export function PublicShowcaseView({ onOpenProject, onOpenInquiry }) {
           </div>
         </div>
 
-        {/* Live Metrics Ticker Banner */}
+        {/* Public Research Impact Highlights (Confidential Revenue Figures Restricted to Executive View) */}
         <div className="mt-8 pt-8 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="p-3 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm">
-            <span className="text-xs text-slate-400 font-medium block">Realized Revenue</span>
-            <span className="text-xl lg:text-2xl font-extrabold text-emerald-400">{formatCurrency(totalRealizedRevenue)}</span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">{totalTargetAchievementPct}% of ₹{TOTAL_ANNUAL_TARGET_CR} Cr Target</span>
+            <span className="text-xs text-slate-400 font-medium block">Active Projects</span>
+            <span className="text-xl lg:text-2xl font-extrabold text-blue-300">{projects.length}+</span>
+            <span className="text-[10px] text-slate-400 block mt-0.5">Sponsored & Industry Grants</span>
           </div>
           <div className="p-3 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm">
-            <span className="text-xs text-slate-400 font-medium block">Total Sanctioned</span>
-            <span className="text-xl lg:text-2xl font-extrabold text-blue-300">{formatCurrency(totalSanctionedAmount)}</span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">Approved External Grants</span>
+            <span className="text-xs text-slate-400 font-medium block">Centres of Excellence</span>
+            <span className="text-xl lg:text-2xl font-extrabold text-emerald-400">{coeFacilities.length} CoEs</span>
+            <span className="text-[10px] text-slate-400 block mt-0.5">High-End Testing & R&D Labs</span>
           </div>
           <div className="p-3 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm">
             <span className="text-xs text-slate-400 font-medium block">Patents & IP</span>
@@ -303,11 +303,11 @@ export function PublicShowcaseView({ onOpenProject, onOpenInquiry }) {
                   </div>
                 </div>
 
-                {/* Card Footer */}
+                {/* Card Footer (Public Privacy Compliant) */}
                 <div className="bg-slate-50 px-6 py-3 border-t border-slate-100 flex items-center justify-between text-xs">
                   <div>
-                    <span className="text-[10px] text-slate-400 block uppercase font-medium">Realized Funding</span>
-                    <span className="font-extrabold text-emerald-700">{formatCurrency(project.realizedAmount)}</span>
+                    <span className="text-[10px] text-slate-400 block uppercase font-medium">Research Domain</span>
+                    <span className="font-bold text-slate-700">{project.category || 'Sponsored R&D'}</span>
                   </div>
                   <button
                     onClick={() => onOpenProject(project)}

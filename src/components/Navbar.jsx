@@ -102,28 +102,30 @@ export function Navbar({ activeTab, setActiveTab }) {
             </span>
           </div>
 
-          {/* Right: NAAC Grade & Live Realization Quick Ticker */}
-          <div className="flex items-center gap-3 ml-auto text-xs">
-            <div className="flex items-center gap-1.5 bg-amber-500/20 border border-amber-400/40 text-amber-300 px-2 py-0.5 rounded text-[10px] font-bold">
-              <Award className="w-3 h-3 text-amber-400" />
-              <span>NAAC 'A' GRADE (3.16 CGPA)</span>
-            </div>
+            {/* Right: NAAC Grade & Live Realization Quick Ticker (Restricted to Authorized Roles) */}
+            <div className="flex items-center gap-3 ml-auto text-xs">
+              <div className="flex items-center gap-1.5 bg-amber-500/20 border border-amber-400/40 text-amber-300 px-2 py-0.5 rounded text-[10px] font-bold">
+                <Award className="w-3 h-3 text-amber-400" />
+                <span>NAAC 'A' GRADE (3.16 CGPA)</span>
+              </div>
 
-            <div className="hidden lg:flex items-center gap-2 text-slate-300">
-              <span>Target: <strong className="text-emerald-400">₹4.25 Cr</strong></span>
-              <span className="text-slate-500">/</span>
-              <span>Realized: <strong className="text-amber-300">{formatCurrency(totalRealizedRevenue)}</strong> ({totalTargetAchievementPct}%)</span>
-            </div>
+              {(currentRole === 'CARS_ADMIN' || currentRole === 'COORDINATOR') && (
+                <div className="hidden lg:flex items-center gap-2 text-slate-300 animate-in fade-in">
+                  <span>Target: <strong className="text-emerald-400">₹4.25 Cr</strong></span>
+                  <span className="text-slate-500">/</span>
+                  <span>Realized: <strong className="text-amber-300">{formatCurrency(totalRealizedRevenue)}</strong> ({totalTargetAchievementPct}%)</span>
+                </div>
+              )}
 
-            <button 
-              onClick={resetToDefaults}
-              title="Reset platform to authentic default seed data"
-              className="text-slate-400 hover:text-white flex items-center gap-1 transition-colors pl-2 border-l border-slate-700 text-[10px]"
-            >
-              <RotateCcw className="w-3 h-3" />
-              <span className="hidden sm:inline">Reset</span>
-            </button>
-          </div>
+              <button 
+                onClick={resetToDefaults}
+                title="Reset platform to authentic default seed data"
+                className="text-slate-400 hover:text-white flex items-center gap-1 transition-colors pl-2 border-l border-slate-700 text-[10px]"
+              >
+                <RotateCcw className="w-3 h-3" />
+                <span className="hidden sm:inline">Reset</span>
+              </button>
+            </div>
         </div>
       </div>
 
@@ -181,20 +183,22 @@ export function Navbar({ activeTab, setActiveTab }) {
           {/* Right Header Section: Primary Action & Persona Switcher */}
           <div className="flex items-center gap-3">
             
-            {/* PROMINENT ACTION BUTTON: Generate Official PDF Report */}
-            <button
-              onClick={() => setIsReportModalOpen(true)}
-              className="relative group overflow-hidden px-4 py-2 bg-gradient-to-r from-guni-crimson to-red-800 hover:from-guni-crimsonDark hover:to-guni-crimson text-white font-bold rounded-xl text-xs shadow-md hover:shadow-red-900/20 border border-amber-300/30 flex items-center gap-2 transition-all active:scale-98"
-              title="Generate Official Statutory Research Report under Dr. Heena Patel & GUNI"
-            >
-              <div className="absolute inset-0 w-1/2 h-full bg-white/10 skew-x-12 -translate-x-full group-hover:translate-x-300 transition-transform duration-1000"></div>
-              <FileText className="w-4 h-4 text-amber-300 shrink-0" />
-              <div className="text-left hidden sm:block">
-                <span className="block leading-tight font-extrabold">Generate Report</span>
-                <span className="text-[9px] text-amber-200/90 font-medium block">Official GUNI PDF</span>
-              </div>
-              <span className="sm:hidden font-extrabold">PDF Report</span>
-            </button>
+            {/* PROMINENT ACTION BUTTON: Generate Official PDF Report (Restricted to CARS Executive) */}
+            {currentRole === 'CARS_ADMIN' && (
+              <button
+                onClick={() => setIsReportModalOpen(true)}
+                className="relative group overflow-hidden px-4 py-2 bg-gradient-to-r from-guni-crimson to-red-800 hover:from-guni-crimsonDark hover:to-guni-crimson text-white font-bold rounded-xl text-xs shadow-md hover:shadow-red-900/20 border border-amber-300/30 flex items-center gap-2 transition-all active:scale-98 animate-in fade-in"
+                title="Generate Official Statutory Research Report under Dr. Heena Patel & GUNI"
+              >
+                <div className="absolute inset-0 w-1/2 h-full bg-white/10 skew-x-12 -translate-x-full group-hover:translate-x-300 transition-transform duration-1000"></div>
+                <FileText className="w-4 h-4 text-amber-300 shrink-0" />
+                <div className="text-left hidden sm:block">
+                  <span className="block leading-tight font-extrabold">Generate Report</span>
+                  <span className="text-[9px] text-amber-200/90 font-medium block">Official GUNI PDF</span>
+                </div>
+                <span className="sm:hidden font-extrabold">PDF Report</span>
+              </button>
+            )}
 
             {/* Notification Bell */}
             <div className="relative">

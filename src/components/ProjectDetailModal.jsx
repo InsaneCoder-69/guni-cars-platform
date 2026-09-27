@@ -121,14 +121,14 @@ export function ProjectDetailModal({ project, onClose }) {
             </div>
           </div>
 
-          {/* Financial Overview Grid */}
-          <div>
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-                <DollarSign className="w-4 h-4 text-emerald-600" />
-                Financial Realization & Revenue Ledger
-              </h3>
-              {(currentRole === 'FACULTY' || currentRole === 'COORDINATOR' || currentRole === 'CARS_ADMIN') && (
+          {/* Financial Overview Grid (Protected: Restricted to Authorized University Personnel) */}
+          {(currentRole === 'CARS_ADMIN' || currentRole === 'COORDINATOR' || currentRole === 'FACULTY') ? (
+            <div>
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
+                  <DollarSign className="w-4 h-4 text-emerald-600" />
+                  Financial Realization & Revenue Ledger
+                </h3>
                 <button
                   onClick={() => setShowAddTranche(!showAddTranche)}
                   className="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold px-3 py-1.5 rounded-lg border border-emerald-300 flex items-center gap-1.5 transition-colors"
@@ -136,120 +136,137 @@ export function ProjectDetailModal({ project, onClose }) {
                   <PlusCircle className="w-3.5 h-3.5 text-emerald-600" />
                   Log New Installment
                 </button>
+              </div>
+
+              {/* Quick Financial Cards */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                  <span className="text-[11px] font-semibold text-slate-500 uppercase block">Total Sanctioned</span>
+                  <span className="text-base font-extrabold text-slate-900">{formatCurrency(project.sanctionedAmount)}</span>
+                </div>
+                <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+                  <span className="text-[11px] font-semibold text-emerald-700 uppercase block">Realized in Bank</span>
+                  <span className="text-base font-extrabold text-emerald-800">{formatCurrency(project.realizedAmount)}</span>
+                </div>
+                <div className="p-3 bg-amber-50 rounded-xl border border-amber-200">
+                  <span className="text-[11px] font-semibold text-amber-700 uppercase block">Pending Tranche</span>
+                  <span className="text-base font-extrabold text-amber-800">{formatCurrency(pendingAmount)}</span>
+                </div>
+                <div className="p-3 bg-indigo-50 rounded-xl border border-indigo-200">
+                  <span className="text-[11px] font-semibold text-indigo-700 uppercase block">PI Incentive Share</span>
+                  <span className="text-base font-extrabold text-indigo-800">{formatCurrency(project.facultyIncentiveShare)}</span>
+                </div>
+              </div>
+
+              {/* Add Installment Form (Conditional) */}
+              {showAddTranche && (
+                <form onSubmit={handleAddInstallment} className="p-4 bg-emerald-50/70 border border-emerald-200 rounded-xl mb-4 animate-in fade-in">
+                  <h4 className="font-bold text-xs text-emerald-900 uppercase tracking-wider mb-2">Record Realized Installment (CARS Accounts)</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+                    <div>
+                      <label className="text-xs font-semibold text-slate-700 block mb-1">Installment Amount (₹)</label>
+                      <input 
+                        type="number" 
+                        placeholder="e.g. 500000"
+                        value={trancheAmt}
+                        onChange={(e) => setTrancheAmt(e.target.value)}
+                        required
+                        className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-slate-700 block mb-1">Bank Ref / Cheque No.</label>
+                      <input 
+                        type="text" 
+                        placeholder="e.g. NEFT-DST-104918"
+                        value={trancheRef}
+                        onChange={(e) => setTrancheRef(e.target.value)}
+                        className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-slate-700 block mb-1">Date Realized</label>
+                      <input 
+                        type="date" 
+                        value={trancheDate}
+                        onChange={(e) => setTrancheDate(e.target.value)}
+                        className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <button 
+                      type="button" 
+                      onClick={() => setShowAddTranche(false)}
+                      className="px-3 py-1 text-xs text-slate-600 hover:bg-slate-200 rounded-lg"
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      type="submit"
+                      className="px-4 py-1 text-xs bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg shadow-sm"
+                    >
+                      Confirm & Update Revenue
+                    </button>
+                  </div>
+                </form>
               )}
-            </div>
 
-            {/* Quick Financial Cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
-                <span className="text-[11px] font-semibold text-slate-500 uppercase block">Total Sanctioned</span>
-                <span className="text-base font-extrabold text-slate-900">{formatCurrency(project.sanctionedAmount)}</span>
-              </div>
-              <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
-                <span className="text-[11px] font-semibold text-emerald-700 uppercase block">Realized in Bank</span>
-                <span className="text-base font-extrabold text-emerald-800">{formatCurrency(project.realizedAmount)}</span>
-              </div>
-              <div className="p-3 bg-amber-50 rounded-xl border border-amber-200">
-                <span className="text-[11px] font-semibold text-amber-700 uppercase block">Pending Tranche</span>
-                <span className="text-base font-extrabold text-amber-800">{formatCurrency(pendingAmount)}</span>
-              </div>
-              <div className="p-3 bg-indigo-50 rounded-xl border border-indigo-200">
-                <span className="text-[11px] font-semibold text-indigo-700 uppercase block">PI Incentive Share</span>
-                <span className="text-base font-extrabold text-indigo-800">{formatCurrency(project.facultyIncentiveShare)}</span>
-              </div>
-            </div>
-
-            {/* Add Installment Form (Conditional) */}
-            {showAddTranche && (
-              <form onSubmit={handleAddInstallment} className="p-4 bg-emerald-50/70 border border-emerald-200 rounded-xl mb-4 animate-in fade-in">
-                <h4 className="font-bold text-xs text-emerald-900 uppercase tracking-wider mb-2">Record Realized Installment (CARS Accounts)</h4>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
-                  <div>
-                    <label className="text-xs font-semibold text-slate-700 block mb-1">Installment Amount (₹)</label>
-                    <input 
-                      type="number" 
-                      placeholder="e.g. 500000"
-                      value={trancheAmt}
-                      onChange={(e) => setTrancheAmt(e.target.value)}
-                      required
-                      className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-semibold text-slate-700 block mb-1">Bank Ref / Cheque No.</label>
-                    <input 
-                      type="text" 
-                      placeholder="e.g. NEFT-DST-104918"
-                      value={trancheRef}
-                      onChange={(e) => setTrancheRef(e.target.value)}
-                      className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-semibold text-slate-700 block mb-1">Date Realized</label>
-                    <input 
-                      type="date" 
-                      value={trancheDate}
-                      onChange={(e) => setTrancheDate(e.target.value)}
-                      className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
-                    />
-                  </div>
-                </div>
-                <div className="flex justify-end gap-2">
-                  <button 
-                    type="button" 
-                    onClick={() => setShowAddTranche(false)}
-                    className="px-3 py-1 text-xs text-slate-600 hover:bg-slate-200 rounded-lg"
-                  >
-                    Cancel
-                  </button>
-                  <button 
-                    type="submit"
-                    className="px-4 py-1 text-xs bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg shadow-sm"
-                  >
-                    Confirm & Update Revenue
-                  </button>
-                </div>
-              </form>
-            )}
-
-            {/* Installments Table */}
-            <div className="border border-slate-200 rounded-xl overflow-hidden">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 uppercase text-[10px]">
-                  <tr>
-                    <th className="p-2.5">Tranche #</th>
-                    <th className="p-2.5">Date Realized</th>
-                    <th className="p-2.5">Transaction Ref</th>
-                    <th className="p-2.5">Amount (₹)</th>
-                    <th className="p-2.5">Utilization Cert (UC)</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {project.installments && project.installments.length > 0 ? (
-                    project.installments.map((inst, i) => (
-                      <tr key={i} className="hover:bg-slate-50/80">
-                        <td className="p-2.5 font-bold text-slate-800">Tranche {inst.trancheNo || i + 1}</td>
-                        <td className="p-2.5 text-slate-600">{inst.date}</td>
-                        <td className="p-2.5 font-mono text-slate-600">{inst.ref}</td>
-                        <td className="p-2.5 font-bold text-emerald-700">{formatCurrency(inst.amount)}</td>
-                        <td className="p-2.5">
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                            Audited & Cleared
-                          </span>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
+              {/* Installments Table */}
+              <div className="border border-slate-200 rounded-xl overflow-hidden">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 uppercase text-[10px]">
                     <tr>
-                      <td colSpan={5} className="p-4 text-center text-slate-400">No installments logged yet.</td>
+                      <th className="p-2.5">Tranche #</th>
+                      <th className="p-2.5">Date Realized</th>
+                      <th className="p-2.5">Transaction Ref</th>
+                      <th className="p-2.5">Amount (₹)</th>
+                      <th className="p-2.5">Utilization Cert (UC)</th>
                     </tr>
-                  )}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {project.installments && project.installments.length > 0 ? (
+                      project.installments.map((inst, i) => (
+                        <tr key={i} className="hover:bg-slate-50/80">
+                          <td className="p-2.5 font-bold text-slate-800">Tranche {inst.trancheNo || i + 1}</td>
+                          <td className="p-2.5 text-slate-600">{inst.date}</td>
+                          <td className="p-2.5 font-mono text-slate-600">{inst.ref}</td>
+                          <td className="p-2.5 font-bold text-emerald-700">{formatCurrency(inst.amount)}</td>
+                          <td className="p-2.5">
+                            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                              <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                              Audited & Cleared
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={5} className="p-4 text-center text-slate-400">No installments logged yet.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-600 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-slate-200/80 rounded-lg text-slate-500">
+                  <ShieldAlert className="w-5 h-5 text-slate-600" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-800 text-xs">Financial Ledger & Bank Realization Protected</h4>
+                  <p className="text-[11px] text-slate-500 mt-0.5">
+                    Individual grant tranches, sanction amounts, and faculty revenue shares are confidential to authorized CARS executives and Principal Investigators.
+                  </p>
+                </div>
+              </div>
+              <span className="text-[10px] bg-slate-200 text-slate-700 font-bold px-2.5 py-1 rounded-full uppercase shrink-0">
+                Institutional Privacy
+              </span>
+            </div>
+          )}
 
           {/* Research Team & Student Contributors */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
