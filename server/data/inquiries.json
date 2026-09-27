@@ -1,0 +1,26 @@
+[
+  {
+    "id": "inq-101",
+    "clientName": "Sun Pharmaceutical Industries Ltd",
+    "contactPerson": "Mr. Rajesh Kothari (VP - R&D)",
+    "email": "rajesh.kothari@sunpharma.example.com",
+    "phone": "+91 98250 11234",
+    "serviceRequested": "Bioavailability Testing & Stability Study at SKPCER Testing Centre",
+    "targetInstitute": "SKPCER",
+    "budgetEstimated": "₹6,50,000",
+    "status": "In Discussion",
+    "date": "2026-09-18"
+  },
+  {
+    "id": "inq-102",
+    "clientName": "Adani Green Energy Ltd",
+    "contactPerson": "Ms. Sneha Vaghela (Head - Drone Inspection)",
+    "email": "sneha.v@adanigreen.example.com",
+    "phone": "+91 98790 99881",
+    "serviceRequested": "Drone-based Thermal Solar Panel Hotspot Detection & AI Diagnostics",
+    "targetInstitute": "FOET",
+    "budgetEstimated": "₹14,00,000",
+    "status": "Proposal Submitted",
+    "date": "2026-09-15"
+  }
+]

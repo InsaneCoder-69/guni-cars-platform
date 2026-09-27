@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GUNI CARS - Platform Blueprint & Requirement Specification</title>
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 12mm 14mm 12mm 14mm;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #1e293b;
+    background-color: #ffffff;
+    line-height: 1.45;
+    font-size: 10pt;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Page Wrapper */
+  .page {
+    height: 273mm; /* Exact A4 height minus margins (297 - 24 = 273mm) */
+    max-height: 273mm;
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+
+  .page-content {
+    flex: 1;
+  }
+
+  .page-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1.5px solid #1e3a8a;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+    font-size: 8pt;
+    color: #475569;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .page-header-bar span:first-child {
+    color: #1e3a8a;
+    font-weight: 800;
+  }
+
+  .section-title {
+    font-size: 13.5pt;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title::before {
+    content: "";
+    display: inline-block;
+    width: 5px;
+    height: 18px;
+    background-color: #1d4ed8;
+    border-radius: 2px;
+  }
+
+  .section-subtitle {
+    font-size: 9pt;
+    color: #64748b;
+    margin-bottom: 10px;
+  }
+
+  /* Cover Page */
+  .cover-page {
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    padding: 24px 20px;
+  }
+
+  .cover-header {
+    border-bottom: 3px solid #1e3a8a;
+    padding-bottom: 14px;
+  }
+
+  .uni-tag {
+    font-size: 13pt;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #1e3a8a;
+    text-transform: uppercase;
+  }
+
+  .cars-subtitle {
+    font-size: 10.5pt;
+    color: #475569;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .badge-proposal {
+    display: inline-block;
+    background-color: #dbeafe;
+    color: #1d4ed8;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 8.5pt;
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .cover-title {
+    font-size: 22pt;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.25;
+    margin-bottom: 14px;
+  }
+
+  .cover-desc {
+    font-size: 11pt;
+    color: #475569;
+    line-height: 1.6;
+    max-width: 95%;
+  }
+
+  .cover-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 30px;
+  }
+
+  .cover-kpi-card {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 12px 10px;
+    border-top: 4px solid #1e3a8a;
+    text-align: center;
+  }
+
+  .cover-kpi-val {
+    font-size: 16pt;
+    font-weight: 800;
+    color: #1e3a8a;
+  }
+
+  .cover-kpi-lbl {
+    font-size: 8pt;
+    color: #64748b;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .cover-footer {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .meta-col h4 {
+    font-size: 8pt;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .meta-col p {
+    font-size: 9.5pt;
+    color: #1e293b;
+    font-weight: 700;
+  }
+
+  .meta-col span {
+    font-size: 8.5pt;
+    color: #64748b;
+    font-weight: 400;
+  }
+
+  /* Cards & Grids */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+
+  .card-danger {
+    border-left: 3.5px solid #ef4444;
+    background-color: #fffaf0;
+  }
+
+  .card-success {
+    border-left: 3.5px solid #10b981;
+    background-color: #f0fdf4;
+  }
+
+  .card-info {
+    border-left: 3.5px solid #2563eb;
+    background-color: #eff6ff;
+  }
+
+  .card h3 {
+    font-size: 9.5pt;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #0f172a;
+  }
+
+  .card-danger h3 { color: #b91c1c; }
+  .card-success h3 { color: #047857; }
+  .card-info h3 { color: #1d4ed8; }
+
+  .card p, .card li {
+    font-size: 8.5pt;
+    color: #334155;
+    line-height: 1.45;
+  }
+
+  .card ul {
+    margin-left: 14px;
+    margin-top: 4px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+    font-size: 8pt;
+  }
+
+  th {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    font-weight: 700;
+    text-align: left;
+    padding: 5px 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 7.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  td {
+    padding: 4.5px 8px;
+    border: 1px solid #e2e8f0;
+    vertical-align: top;
+    color: #334155;
+    line-height: 1.35;
+  }
+
+  tr:nth-child(even) td {
+    background-color: #f8fafc;
+  }
+
+  .highlight-val {
+    font-weight: 700;
+    color: #1e3a8a;
+  }
+
+  .badge-tag {
+    display: inline-block;
+    padding: 1.5px 5px;
+    border-radius: 3px;
+    font-size: 7pt;
+    font-weight: 600;
+  }
+
+  .badge-gov { background: #dcfce7; color: #166534; }
+  .badge-ind { background: #e0e7ff; color: #3730a3; }
+  .badge-ip { background: #fef3c7; color: #92400e; }
+
+  /* Flow Diagram */
+  .flow-container {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  .flow-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .flow-box {
+    background: #ffffff;
+    border: 1px solid #94a3b8;
+    border-radius: 5px;
+    padding: 7px;
+    flex: 1;
+    text-align: center;
+    margin: 0 4px;
+  }
+
+  .flow-box h4 {
+    font-size: 8.5pt;
+    color: #1e3a8a;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .flow-box p {
+    font-size: 7.5pt;
+    color: #64748b;
+    line-height: 1.3;
+  }
+
+  .flow-arrow {
+    font-size: 11pt;
+    color: #94a3b8;
+    font-weight: bold;
+  }
+
+  .footer-note {
+    font-size: 7.5pt;
+    color: #94a3b8;
+    text-align: center;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 4px;
+    margin-top: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+  <!-- PAGE 1: COVER PAGE -->
+  <div class="page cover-page">
+    <div class="cover-header">
+      <div class="uni-tag">Ganpat University (GUNI)</div>
+      <div class="cars-subtitle">Centre for Advanced Research Studies (CARS)</div>
+    </div>
+
+    <div>
+      <div class="badge-proposal">Official Platform Blueprint & Architecture</div>
+      <h1 class="cover-title">Institute-wise Research & Consultancy Revenue Monitoring, Awareness & Ranking Platform</h1>
+      <p class="cover-desc">
+        A centralized, real-time institutional platform designed to monitor sponsored research, eliminate data silos across all constituent institutes, automate compliance filings for NIRF, NAAC, and QS, and showcase university-wide innovations for public and industrial awareness.
+      </p>
+
+      <div class="cover-kpi-grid">
+        <div class="cover-kpi-card">
+          <div class="cover-kpi-val">₹4.25 Cr</div>
+          <div class="cover-kpi-lbl">Initial Annual Target</div>
+        </div>
+        <div class="cover-kpi-card">
+          <div class="cover-kpi-val">&gt; ₹5.00 Cr</div>
+          <div class="cover-kpi-lbl">2030 Revenue Vision</div>
+        </div>
+        <div class="cover-kpi-card">
+          <div class="cover-kpi-val">12+ Institutes</div>
+          <div class="cover-kpi-lbl">Unified Platform</div>
+        </div>
+        <div class="cover-kpi-card">
+          <div class="cover-kpi-val">150+ Projects</div>
+          <div class="cover-kpi-lbl">Industry Target</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cover-footer">
+      <div class="meta-col">
+        <h4>Based on Strategic Proposal By</h4>
+        <p>Dr. Ajay Kumar Gupta <span>(Director - CARS)</span></p>
+        <p>Dr. Heena Patel <span>(Deputy Director - CARS)</span></p>
+      </div>
+      <div class="meta-col">
+        <h4>Prepared By</h4>
+        <p>Student Engineering & Development Team</p>
+        <span>Ganpat University • Faculty of Engineering & Technology</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: PROBLEM STATEMENT & STRATEGIC CONTEXT -->
+  <div class="page">
+    <div class="page-content">
+      <div class="page-header-bar">
+        <span>GUNI CARS Platform Blueprint</span>
+        <span>1. Executive Summary & Problem Analysis</span>
+      </div>
+
+      <div class="section-title">1. Executive Summary & Strategic Context</div>
+      <div class="section-subtitle">Addressing institutional data fragmentation, awareness gaps, and ranking documentation at Ganpat University</div>
+
+      <div class="grid-2">
+        <div class="card card-danger">
+          <h3>The Current Problem</h3>
+          <ul>
+            <li><strong>Decentralized Data Silos:</strong> Research grants, consultancy contracts, and student innovations remain isolated across individual laptops, lab notebooks, or departmental files across 12+ institutes.</li>
+            <li><strong>Severe Ranking Audit Penalty:</strong> Every year, university coordinators manually chase faculty for sanction letters, utilization certificates (UC), and audited accounts. Missing documentation leads to underreported research metrics in NIRF and NAAC filings.</li>
+            <li><strong>Zero Campus-Wide Awareness:</strong> Students, research scholars, and junior faculty are unaware of ongoing funded projects, open research openings, and high-end CoE facilities on campus.</li>
+            <li><strong>No Real-time Revenue Tracking:</strong> Constituent institutes lack a live tracking panel to benchmark performance against the university's ₹4.25 Cr annual target.</li>
+          </ul>
+        </div>
+
+        <div class="card card-success">
+          <h3>The Platform Solution</h3>
+          <ul>
+            <li><strong>Unified University Repository:</strong> A single authoritative database recording all sponsored research, contract R&D, student projects, and IP commercialization.</li>
+            <li><strong>1-Click Ranking Compliance Engine:</strong> Automated export of pre-formatted NIRF Data Capture System (DCS) and NAAC Criterion 3 data sheets with verified document links.</li>
+            <li><strong>Public Showcase & Discovery Portal:</strong> Public-facing searchable catalog of university research projects, patents, and CoE facilities (3D printers, 5G lab) to attract corporate tie-ups.</li>
+            <li><strong>Live Executive CARS Dashboard:</strong> Real-time progress bars tracking institute achievement against designated revenue quotas.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top: 10px;">2. National Policy Alignment & 2030 Vision</div>
+      <div class="section-subtitle">Fulfilling national research mandates and the CARS 2026–2030 Action Plan</div>
+
+      <div class="grid-3">
+        <div class="card card-info">
+          <h3>NEP 2020 & ANRF</h3>
+          <p>Aligns with the National Education Policy and Anusandhan National Research Foundation to foster translational, multidisciplinary R&D and extramural funding.</p>
+        </div>
+        <div class="card card-info">
+          <h3>Viksit Bharat 2047</h3>
+          <p>Accelerates domestic technology commercialization, patent generation, and prototype readiness (TRL 1–9) supporting Atmanirbhar Bharat.</p>
+        </div>
+        <div class="card card-info">
+          <h3>Industry-Academia MoUs</h3>
+          <p>Provides an industry portal for corporate R&D, MSME consulting, and contract manufacturing via GUNI Centres of Excellence.</p>
+        </div>
+      </div>
+
+      <div class="card" style="border-top: 3px solid #1e3a8a; background: #f8fafc; margin-top: 6px;">
+        <h3 style="color: #1e3a8a;">Expected Outcomes by 2030 (CARS Proposal Target)</h3>
+        <p style="font-size: 8.5pt; color: #334155; line-height: 1.5;">
+          • Annual research consultancy revenue exceeding <strong>₹5.00 Crore</strong> by 2030.<br>
+          • Execution of <strong>150+ industry-sponsored</strong> research projects and <strong>100+ filed/commercialized patents</strong>.<br>
+          • Active Research Consultancy & Innovation Cells established across <strong>every constituent institute</strong>.<br>
+          • Position Ganpat University as a preferred research and technical consultancy partner nationally.
+        </p>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <span>Ganpat University • Centre for Advanced Research Studies (CARS)</span>
+      <span>Page 2</span>
+    </div>
+  </div>
+
+  <!-- PAGE 3: SYSTEM ARCHITECTURE & USER MODULES -->
+  <div class="page">
+    <div class="page-content">
+      <div class="page-header-bar">
+        <span>GUNI CARS Platform Blueprint</span>
+        <span>2. System Architecture & Workflows</span>
+      </div>
+
+      <div class="section-title">3. High-Level Architecture & Data Flow</div>
+      <div class="section-subtitle">Multi-tier workflow from researcher entry to executive compliance export</div>
+
+      <div class="flow-container">
+        <div class="flow-row">
+          <div class="flow-box">
+            <h4>1. Ingestion Layer</h4>
+            <p>Students & Faculty PIs log grants, funding tranches, TRL, & upload sanction PDFs.</p>
+          </div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-box">
+            <h4>2. Institute Verification</h4>
+            <p>Institute Research Coordinators vet sanction letters & bank realization proofs.</p>
+          </div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-box">
+            <h4>3. CARS Aggregation</h4>
+            <p>Centralized monitoring, target vs actual revenue tracking, & audit trails.</p>
+          </div>
+        </div>
+        <div class="flow-row" style="margin-bottom: 0;">
+          <div class="flow-box" style="border-top: 3px solid #10b981;">
+            <h4>Public Showcase Portal</h4>
+            <p>Public innovation catalog, equipment directory, industry consultancy inquiry gateway.</p>
+          </div>
+          <div class="flow-arrow">&harr;</div>
+          <div class="flow-box" style="border-top: 3px solid #3b82f6;">
+            <h4>Compliance & Ranking Engine</h4>
+            <p>One-click export for NIRF (FSR/FCP), NAAC 3.2/3.5, QS, THE, and ARIIA.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top: 8px;">4. Functional Portals & Role-Based Access</div>
+      <div class="section-subtitle">Tailored interfaces designed for students, faculty, coordinators, and executive leadership</div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Public Awareness Gateway (No Login Required)</h3>
+          <p><strong>Audience: Students, Faculty, External Industry & General Public</strong></p>
+          <ul>
+            <li>Searchable catalog of all active & completed research projects.</li>
+            <li>Directory of specialized CoE equipment (e.g. metal 3D printers, 5G IIoT lab, Bosch Rexroth) to invite industry consultancy.</li>
+            <li>"Partner with GUNI" inquiry portal for corporate sponsors.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Student & Research Scholar Innovation Portal</h3>
+          <p><strong>Audience: UG/PG Students & Ph.D. Scholars</strong></p>
+          <ul>
+            <li>Log student innovation grants (SSIP, Hackathons, Incubation funding).</li>
+            <li>Discover open research positions posted by faculty PIs.</li>
+            <li>Generate verifiable digital portfolio of prototypes, patents, and papers.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Faculty & Principal Investigator (PI) Workspace</h3>
+          <p><strong>Audience: Faculty Members & Principal Investigators</strong></p>
+          <ul>
+            <li>Guided project intake wizard with auto-suggested funding bodies.</li>
+            <li>Installment tracker with Utilization Certificate (UC) upload.</li>
+            <li>Faculty incentive and consultancy revenue share calculator.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>CARS Executive Dashboard (Dr. Patel & Dr. Gupta)</h3>
+          <p><strong>Audience: CARS Leadership & University Officers</strong></p>
+          <ul>
+            <li>Real-time revenue monitoring against the ₹4.25 Cr quota.</li>
+            <li>1-Click Ranking Export Engine (NIRF, NAAC, ARIIA).</li>
+            <li>Institute-wise performance leaderboard and gap analysis.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <span>Ganpat University • Centre for Advanced Research Studies (CARS)</span>
+      <span>Page 3</span>
+    </div>
+  </div>
+
+  <!-- PAGE 4: DATA SPECIFICATION (SECTION 5) -->
+  <div class="page">
+    <div class="page-content">
+      <div class="page-header-bar">
+        <span>GUNI CARS Platform Blueprint</span>
+        <span>3. Data Dictionary (Section 5)</span>
+      </div>
+
+      <div class="section-title">5. Comprehensive Data Collection Parameters</div>
+      <div class="section-subtitle">Mandatory data attributes specified in Section 5 of the CARS proposal document</div>
+
+      <h4 style="font-size: 8.5pt; color: #1e3a8a; margin-bottom: 4px;">A. Project & Personnel Parameters</h4>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 25%;">Field Name</th>
+            <th style="width: 20%;">Data Type</th>
+            <th>Description & Accepted Values</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight-val">Project Title</td>
+            <td>Text (String)</td>
+            <td>Full descriptive title of the research consultancy or innovation project</td>
+          </tr>
+          <tr>
+            <td class="highlight-val">Category / Scope</td>
+            <td>Dropdown</td>
+            <td>Sponsored Research, Contract R&D, Industry-funded R&D, Prototype Development, Product Validation, Technology Transfer, Patent Licensing, Student Innovation/SSIP</td>
+          </tr>
+          <tr>
+            <td class="highlight-val">Funding Agency / Partner</td>
+            <td>Text + Category</td>
+            <td>
+              <span class="badge-tag badge-gov">Govt</span> ANRF, DST, DBT, ICAR, ICMR, BIRAC, DRDO, ISRO, MSME, AICTE, CSIR, SERB, GSBTM<br>
+              <span class="badge-tag badge-ind">Industry</span> Corporate R&D, MSME, International, or Internal Seed Grant
+            </td>
+          </tr>
+          <tr>
+            <td class="highlight-val">Investigators & Team</td>
+            <td>Relational References</td>
+            <td>Principal Investigator (PI), Co-PIs (Faculty across GUNI), and Enrolled Students / Ph.D. Scholars (ID, Department, Role)</td>
+          </tr>
+          <tr>
+            <td class="highlight-val">Institute / Department</td>
+            <td>Dropdown</td>
+            <td>Constituent Institute (FOET, FODE, SKPCER, MUIS, DCS/AMPICS, Architecture, CoEs, etc.)</td>
+          </tr>
+          <tr>
+            <td class="highlight-val">Project Duration & TRL</td>
+            <td>Date Range + Level</td>
+            <td>Start Date, Completion Date, and <strong>Technology Readiness Level (TRL 1 through TRL 9)</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4 style="font-size: 8.5pt; color: #1e3a8a; margin-top: 8px; margin-bottom: 4px;">B. Financial & Revenue Tracking Parameters</h4>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 25%;">Financial Metric</th>
+            <th style="width: 20%;">Format</th>
+            <th>Audit Purpose & Ranking Linkage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight-val">Total Sanctioned Cost</td>
+            <td>Currency (₹)</td>
+            <td>Total approved budget stated in the official sanction letter</td>
+          </tr>
+          <tr>
+            <td class="highlight-val">Sanction Letter Document</td>
+            <td>File (PDF)</td>
+            <td><strong>Mandatory Audit Proof</strong> required for NIRF/NAAC data verification</td>
+          </tr>
+          <tr>
+            <td class="highlight-val">Received Revenue (Realized)</td>
+            <td>Currency (₹)</td>
+            <td>Actual cash realized in GUNI bank accounts (broken down by installment/tranche)</td>
+          </tr>
+          <tr>
+            <td class="highlight-val">Utilization Certificate (UC)</td>
+            <td>File (PDF)</td>
+            <td>Signed UC uploaded per tranche for financial clearance</td>
+          </tr>
+          <tr>
+            <td class="highlight-val">Industry Contribution</td>
+            <td>Currency (₹)</td>
+            <td>Split into Cash component vs In-Kind value (hardware, tools, software licenses)</td>
+          </tr>
+          <tr>
+            <td class="highlight-val">Commercial IP Royalties</td>
+            <td>Currency (₹)</td>
+            <td>Revenue from patent licensing, technology transfer agreements, or product sales</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4 style="font-size: 8.5pt; color: #1e3a8a; margin-top: 8px; margin-bottom: 4px;">C. Research Outputs & Intellectual Property (IP)</h4>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 25%;">Output Dimension</th>
+            <th style="width: 20%;">Key Attributes</th>
+            <th>Accreditation & Public Showcase Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight-val">Patents</td>
+            <td>App No, Filing/Grant Date</td>
+            <td>Published and granted patents feed directly into NAAC 3.4.3 & NIRF RPC</td>
+          </tr>
+          <tr>
+            <td class="highlight-val">Prototypes & Technologies</td>
+            <td>Name, Photos, TRL</td>
+            <td>Showcased on the public portal to demonstrate industrial readiness</td>
+          </tr>
+          <tr>
+            <td class="highlight-val">Startups Incubated</td>
+            <td>Startup Name, CIN, Team</td>
+            <td>Links student & faculty ventures to GUNI Incubation / ARIIA reporting</td>
+          </tr>
+          <tr>
+            <td class="highlight-val">Publications & MoUs</td>
+            <td>DOI, WoS/Scopus ID</td>
+            <td>Indexed papers with impact factors; active corporate MoUs</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer-note">
+      <span>Ganpat University • Centre for Advanced Research Studies (CARS)</span>
+      <span>Page 4</span>
+    </div>
+  </div>
+
+  <!-- PAGE 5: INSTITUTE QUOTAS & COE INFRASTRUCTURE -->
+  <div class="page">
+    <div class="page-content">
+      <div class="page-header-bar">
+        <span>GUNI CARS Platform Blueprint</span>
+        <span>4. Institute Quotas & CoE Infrastructure</span>
+      </div>
+
+      <div class="section-title">6. Institute-wise Annual Consultancy Revenue Targets</div>
+      <div class="section-subtitle">Official revenue quotas established by CARS to reach ₹4.25 Cr annually (Scaling to > ₹5.00 Cr by 2030)</div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Constituent Institute / School</th>
+            <th style="text-align: right; width: 18%;">Target (₹ Cr)</th>
+            <th>Primary Consultancy & Research Focus Areas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Faculty of Engineering & Technology (FOET / UVPCE / ICT)</strong></td>
+            <td style="text-align: right;" class="highlight-val">₹ 1.30 Cr</td>
+            <td>AI, Robotics, Industry 4.0, Renewable Energy, Automobile, Semiconductors, Testing</td>
+          </tr>
+          <tr>
+            <td><strong>Centres of Excellence (Additive Mfg, 5G, Bosch Rexroth)</strong></td>
+            <td style="text-align: right;" class="highlight-val">₹ 1.00 Cr</td>
+            <td>Metal/Polymer 3D Printing, Cobots, 5G Industrial IoT, Digital Twin, Defence/Aerospace</td>
+          </tr>
+          <tr>
+            <td><strong>Faculty of Science (MUIS)</strong></td>
+            <td style="text-align: right;" class="highlight-val">₹ 0.30 Cr</td>
+            <td>Biotech, Material Characterization, Chemical Analysis, Environmental Studies</td>
+          </tr>
+          <tr>
+            <td><strong>Faculty of Diploma Engineering (FODE)</strong></td>
+            <td style="text-align: right;" class="highlight-val">₹ 0.30 Cr</td>
+            <td>Industrial Testing, SME Prototyping, CAD/CAM/CAE Simulation Services</td>
+          </tr>
+          <tr>
+            <td><strong>Faculty of Agriculture Allied Sciences & Technology</strong></td>
+            <td style="text-align: right;" class="highlight-val">₹ 0.25 Cr</td>
+            <td>Agri-Tech, Precision Farming, Food Processing/Packaging, Seed Biotech</td>
+          </tr>
+          <tr>
+            <td><strong>Faculty of Computer Applications (DCS / AMPICS)</strong></td>
+            <td style="text-align: right;" class="highlight-val">₹ 0.20 Cr</td>
+            <td>FinTech, AI Solutions, Cybersecurity Audits for SMEs, Digital Transformation</td>
+          </tr>
+          <tr>
+            <td><strong>Faculty of Pharmacy (IOPH / SKPCER)</strong></td>
+            <td style="text-align: right;" class="highlight-val">₹ 0.20 Cr</td>
+            <td>Drug Formulation, Pharmacovigilance, GMP Compliance Consultancy, Testing</td>
+          </tr>
+          <tr>
+            <td><strong>Faculty of Architecture, Design & Planning</strong></td>
+            <td style="text-align: right;" class="highlight-val">₹ 0.20 Cr</td>
+            <td>Smart City Advisory, Green Building, GIS & Spatial Analytics, BIM, Heritage</td>
+          </tr>
+          <tr>
+            <td><strong>Faculty of Health & Allied Sciences (Physiotherapy)</strong></td>
+            <td style="text-align: right;" class="highlight-val">₹ 0.15 Cr</td>
+            <td>Ergonomic Assessments, Rehabilitation Planning, Sports Performance Analytics</td>
+          </tr>
+          <tr>
+            <td><strong>Nursing</strong></td>
+            <td style="text-align: right;" class="highlight-val">₹ 0.15 Cr</td>
+            <td>Community Health Consultancy, Occupational Industrial Health Programs</td>
+          </tr>
+          <tr>
+            <td><strong>Faculty of Management Studies (VMPIM / CMSR / VMPCIMS)</strong></td>
+            <td style="text-align: right;" class="highlight-val">₹ 0.10 Cr</td>
+            <td>MSME Advisory, Startup Incubation Mentorship, Executive Development</td>
+          </tr>
+          <tr>
+            <td><strong>Social Science & Humanities</strong></td>
+            <td style="text-align: right;" class="highlight-val">₹ 0.10 Cr</td>
+            <td>Policy Development, Social Impact Assessments, Urban Socio-Economic Studies</td>
+          </tr>
+          <tr style="background-color: #dbeafe; font-weight: bold;">
+            <td>TOTAL ANNUAL REVENUE TARGET</td>
+            <td style="text-align: right; color: #1e3a8a; font-size: 9pt;">₹ 4.25 Cr</td>
+            <td>Official Target Established by CARS Leadership</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-title" style="margin-top: 8px;">7. Core Centre of Excellence (CoE) Assets for Commercialization</div>
+      <div class="section-subtitle">High-end facilities to be cataloged on the public portal to drive corporate consultancy contracts</div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3 style="color: #1e3a8a;">Additive Manufacturing & Smart Systems</h3>
+          <ul>
+            <li>Advanced 3D printers (metal and polymer sintering).</li>
+            <li>5-axis CNC machines and smart manufacturing lines.</li>
+            <li>Reverse engineering and rapid prototyping scanners.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="color: #1e3a8a;">5G, Automation & Industry 4.0</h3>
+          <ul>
+            <li>5G industrial communications and Industrial IoT (IIoT) testbeds.</li>
+            <li>Bosch Rexroth hydraulic, pneumatic, and PLC/SCADA benches.</li>
+            <li>Collaborative robots (Cobots) & Digital Twin / AR-VR facilities.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <span>Ganpat University • Centre for Advanced Research Studies (CARS)</span>
+      <span>Page 5</span>
+    </div>
+  </div>
+
+  <!-- PAGE 6: RANKINGS ENGINE & ROADMAP -->
+  <div class="page">
+    <div class="page-content">
+      <div class="page-header-bar">
+        <span>GUNI CARS Platform Blueprint</span>
+        <span>5. Rankings Compliance & Implementation</span>
+      </div>
+
+      <div class="section-title">8. Direct University Ranking & Filing Mechanics</div>
+      <div class="section-subtitle">Automating annual audit submissions from continuous real-time data collection</div>
+
+      <div class="grid-2">
+        <div class="card" style="border-top: 3px solid #1d4ed8;">
+          <h3>NIRF (Research & Professional Practice - RPC)</h3>
+          <ul>
+            <li><strong>FSR (Funded Sponsored Research):</strong> Generates verified tables of government and industry projects with audited sanctioned amounts.</li>
+            <li><strong>FCP (Funded Consultancy Projects):</strong> Auto-calculates exact client consultancy cash receipts per financial year with downloadable proof attachments.</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-top: 3px solid #059669;">
+          <h3>NAAC (Criterion 3: Research & Innovations)</h3>
+          <ul>
+            <li><strong>Metric 3.2.1 / 3.2.2:</strong> Extramural research funding data pre-formatted into official NAAC Excel templates.</li>
+            <li><strong>Metric 3.4.3 / 3.4.4:</strong> Complete patent registry (published and granted).</li>
+            <li><strong>Metric 3.5.1 / 3.5.2:</strong> Audited consultancy revenue and corporate training fees.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card" style="border-top: 3px solid #d97706;">
+          <h3>QS & Times Higher Education (THE)</h3>
+          <ul>
+            <li><strong>Industry Income / Knowledge Transfer:</strong> Instant calculation of research revenue generated from industry per academic staff.</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-top: 3px solid #7c3aed;">
+          <h3>ARIIA (Innovation Ranking)</h3>
+          <ul>
+            <li>Tracks progression of Technology Readiness Levels (TRLs), working prototypes, student startups, and IP commercialization royalties.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top: 8px;">9. Proposed 4-Sprint Implementation Roadmap</div>
+      <div class="section-subtitle">Structured development timeline for the student development team</div>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 15%;">Sprint</th>
+            <th style="width: 22%;">Focus Area</th>
+            <th>Deliverables & Milestones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight-val">Sprint 1 (W1-2)</td>
+            <td>Schema & Intake Forms</td>
+            <td>Relational database schema for projects, tranches, and IP; multi-role authentication; project intake forms with PDF upload.</td>
+          </tr>
+          <tr>
+            <td class="highlight-val">Sprint 2 (W3-4)</td>
+            <td>Dashboards & Quotas</td>
+            <td>Institute target progress bars (₹4.25 Cr matrix); institute coordinator review and approval workflow.</td>
+          </tr>
+          <tr>
+            <td class="highlight-val">Sprint 3 (W5-6)</td>
+            <td>Ranking Export Engine</td>
+            <td>Automated Excel export generator formatted specifically for NIRF (RPC) and NAAC (Criterion 3.2 & 3.5).</td>
+          </tr>
+          <tr>
+            <td class="highlight-val">Sprint 4 (W7-8)</td>
+            <td>Public Showcase & Pilot</td>
+            <td>Public searchable innovation and CoE equipment directory; pilot testing with FOET and Centres of Excellence.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="card card-success" style="margin-top: 6px;">
+        <h3>Next Action for Student Team</h3>
+        <p style="font-size: 8.5pt;">
+          Present this blueprint directly to <strong>Dr. Heena Patel</strong> and <strong>Dr. Ajay Kumar Gupta</strong> to validate the data schema, confirm the approval workflows, and obtain sign-off to begin active development.
+        </p>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <span>Ganpat University • Centre for Advanced Research Studies (CARS)</span>
+      <span>Page 6</span>
+    </div>
+  </div>
+
+</body>
+</html>
