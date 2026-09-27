@@ -15,7 +15,9 @@
 [![Node.js](https://img.shields.io/badge/Node.js-Express_5.2-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Accreditation](https://img.shields.io/badge/NAAC-Grade_'A'_(3.16_CGPA)-D4AF37?style=flat-square)](https://www.ganpatuniversity.ac.in/)
 [![UGC](https://img.shields.io/badge/UGC-State_Private_University-990000?style=flat-square)](https://www.ugc.ac.in/)
-[![License](https://img.shields.io/badge/License-Proprietary-0F2C59?style=flat-square)](#)
+[![License](https://img.shields.io/badge/License-MIT-0F2C59?style=flat-square)](LICENSE)
+[![Visibility](https://img.shields.io/badge/Visibility-Private-critical?style=flat-square)](#)
+[![CI](https://github.com/InsaneCoder-69/guni-cars-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/InsaneCoder-69/guni-cars-platform/actions)
 
 </div>
 
@@ -275,6 +277,7 @@ guni-cars-platform/
 * [Platform Blueprint & Architecture](docs/ARCHITECTURE_AND_BLUEPRINT.md)
 * [Full-Stack Implementation Plan](docs/IMPLEMENTATION_PLAN.md)
 * [Walkthrough & Verification Dossier](docs/WALKTHROUGH.md)
+* [Contribution & Development Guidelines](CONTRIBUTING.md)
 * [Official Presentation HTML Slide Deck](blueprint_presentation.html)
 
 ---

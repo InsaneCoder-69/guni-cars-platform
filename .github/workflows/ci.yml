@@ -1,0 +1,40 @@
+name: Build & Test CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend distribution
+        run: npm run build
+
+      - name: Start backend server & verify health
+        run: |
+          npm run server &
+          SERVER_PID=$!
+          sleep 3
+          curl --fail --retry 5 --retry-connrefused http://localhost:5000/api/health
+          curl --fail http://localhost:5000/api/stats
+          kill $SERVER_PID
