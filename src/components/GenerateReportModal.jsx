@@ -76,7 +76,7 @@ export function GenerateReportModal({ onClose }) {
     } catch (err) {
       console.error('Report Generation Error:', err);
       setIsGenerating(false);
-      setErrorMsg(err.message || 'Failed to generate PDF. Ensure the backend server is running on port 5000.');
+      setErrorMsg(err.message || 'Failed to generate PDF. Ensure the backend server is running and accessible.');
     }
   };
 
@@ -255,7 +255,7 @@ export function GenerateReportModal({ onClose }) {
           {/* Footer Actions */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-slate-100">
             <span className="text-[11px] text-slate-500 text-center sm:text-left">
-              Rendered via Headless Chromium Backend Service (Port 5000)
+              Rendered via Headless Chromium Backend Service
             </span>
 
             <div className="flex items-center gap-3 w-full sm:w-auto">

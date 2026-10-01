@@ -3,6 +3,11 @@ import { INSTITUTES, COE_FACILITIES, INITIAL_PROJECTS, STUDENT_RESEARCH_OPENINGS
 
 const PlatformContext = createContext();
 
+// Dynamic API base URL configuration:
+// In production or when hosted together: '/api'
+// In local development or standalone: custom env variable or 'http://localhost:5000/api'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api');
+
 export function PlatformProvider({ children }) {
   // Active User Role Switcher
   const [currentRole, setCurrentRole] = useState(() => {
@@ -51,8 +56,8 @@ export function PlatformProvider({ children }) {
     async function fetchBackendData() {
       try {
         const [projRes, inqRes] = await Promise.allSettled([
-          fetch('http://localhost:5000/api/projects'),
-          fetch('http://localhost:5000/api/inquiries')
+          fetch(`${API_BASE_URL}/projects`),
+          fetch(`${API_BASE_URL}/inquiries`)
         ]);
 
         if (projRes.status === 'fulfilled' && projRes.value.ok) {
@@ -146,7 +151,7 @@ export function PlatformProvider({ children }) {
     setProjects(prev => [newProject, ...prev]);
 
     // Send to backend
-    fetch('http://localhost:5000/api/projects', {
+    fetch(`${API_BASE_URL}/projects`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newProject)
@@ -175,7 +180,7 @@ export function PlatformProvider({ children }) {
       return p;
     }));
 
-    fetch(`http://localhost:5000/api/projects/${projectId}/approve`, {
+    fetch(`${API_BASE_URL}/projects/${projectId}/approve`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ notes })
@@ -197,7 +202,7 @@ export function PlatformProvider({ children }) {
       return p;
     }));
 
-    fetch(`http://localhost:5000/api/projects/${projectId}/installments`, {
+    fetch(`${API_BASE_URL}/projects/${projectId}/installments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(installment)
@@ -214,7 +219,7 @@ export function PlatformProvider({ children }) {
     };
     setInquiries(prev => [newInq, ...prev]);
 
-    fetch('http://localhost:5000/api/inquiries', {
+    fetch(`${API_BASE_URL}/inquiries`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newInq)
@@ -225,7 +230,7 @@ export function PlatformProvider({ children }) {
 
   // Action: Generate Official PDF Report via Backend Chrome Service
   const generateOfficialPdfReport = async (options = {}) => {
-    const response = await fetch('http://localhost:5000/api/reports/generate-pdf', {
+    const response = await fetch(`${API_BASE_URL}/reports/generate-pdf`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(options)

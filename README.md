@@ -274,6 +274,7 @@ guni-cars-platform/
 
 ## 📚 Complete Project Documentation
 
+* [Production Deployment Guide](DEPLOYMENT.md)
 * [Platform Blueprint & Architecture](docs/ARCHITECTURE_AND_BLUEPRINT.md)
 * [Full-Stack Implementation Plan](docs/IMPLEMENTATION_PLAN.md)
 * [Walkthrough & Verification Dossier](docs/WALKTHROUGH.md)

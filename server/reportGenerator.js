@@ -557,11 +557,40 @@ export async function generateOfficialPdf({
 
   fs.writeFileSync(tempHtmlPath, html, 'utf-8');
 
-  // Compile to PDF via Chrome headless
-  const chromePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+  // Locate Chrome or Chromium cross-platform (Linux / Windows / macOS / Cloud Docker)
+  function findChromeExecutable() {
+    if (process.env.CHROME_BIN && fs.existsSync(process.env.CHROME_BIN)) {
+      return process.env.CHROME_BIN;
+    }
+    const candidates = [
+      // Linux / Cloud Containers (Render, Railway, Docker, Debian, Ubuntu)
+      '/usr/bin/google-chrome',
+      '/usr/bin/google-chrome-stable',
+      '/usr/bin/chromium',
+      '/usr/bin/chromium-browser',
+      '/snap/bin/chromium',
+      // Windows
+      'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+      'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+      // macOS
+      '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      '/Applications/Chromium.app/Contents/MacOS/Chromium'
+    ];
+    for (const c of candidates) {
+      if (fs.existsSync(c)) return c;
+    }
+    return process.env.CHROME_BIN || (process.platform === 'win32' ? 'chrome.exe' : 'google-chrome');
+  }
+
+  const chromePath = findChromeExecutable();
   const args = [
     '--headless',
     '--disable-gpu',
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage',
     '--no-pdf-header-footer',
     `--print-to-pdf=${tempPdfPath}`,
     tempHtmlPath
@@ -587,6 +616,6 @@ export async function generateOfficialPdf({
       if (fs.existsSync(tempHtmlPath)) fs.unlinkSync(tempHtmlPath);
       if (fs.existsSync(tempPdfPath)) fs.unlinkSync(tempPdfPath);
     } catch (e) {}
-    throw error;
+    throw new Error(`Failed to compile PDF via headless browser (${chromePath}): ${error.message}`);
   }
 }
