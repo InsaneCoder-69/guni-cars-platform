@@ -39,7 +39,7 @@ Render automatically builds your React frontend and serves it through Express on
    - **Runtime**: `Node`
    - **Build Command**:
      ```bash
-     npm install && npm run build
+     npm install --include=dev && npm run build
      ```
    - **Start Command**:
      ```bash
